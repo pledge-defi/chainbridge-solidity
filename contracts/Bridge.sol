@@ -125,7 +125,7 @@ contract Bridge is Pausable, AccessControl, SafeMath {
     }
 
     function adminSetCallableAddress(address _callable_address) public onlyAdmin {
-        callable_address = _callable_address
+        callable_address = _callable_address;
     }
 
     /**
