@@ -35,6 +35,8 @@ contract Bridge is Pausable, AccessControl, SafeMath {
         uint256 _proposedBlock;
     }
 
+    address public callable_address;
+
     // destinationChainID => number of deposits
     mapping(uint8 => uint64) public _depositCounts;
     // resourceID => handler address
@@ -120,6 +122,10 @@ contract Bridge is Pausable, AccessControl, SafeMath {
             _totalRelayers++;
         }
 
+    }
+
+    function adminSetCallableAddress(address _callable_address) public onlyAdmin {
+        callable_address = _callable_address
     }
 
     /**
@@ -290,6 +296,7 @@ contract Bridge is Pausable, AccessControl, SafeMath {
         @notice Emits {Deposit} event.
      */
     function deposit(uint8 destinationChainID, bytes32 resourceID, bytes calldata data) external payable whenNotPaused {
+        require(msg.sender == callable_address);
         require(msg.value == _fee, "Incorrect fee supplied");
 
         address handler = _resourceIDToHandlerAddress[resourceID];
